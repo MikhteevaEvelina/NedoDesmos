@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
-import math
+import matplotlib.pyplot as plt
+import numpy as np
 from funk import solving_eq
 
 
@@ -18,7 +19,7 @@ def main():
 
     except ValueError:
         messagebox.showerror("Error", "Неверный формат ввода")
-        
+
     if len(answer) == 1:
         label_res.config(text=answer[0])
 
@@ -31,7 +32,14 @@ def main():
         label_res_x_1.config(text=answer[1])
         label_res_x_2.config(text=answer[2])
 
-
+    x = np.linspace(-10, 10, 400)
+    eq = a * x**2 + b * x + c
+    plt.plot(x, eq)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("Визуализация функции")
+    plt.grid(True)
+    plt.show()
 
 
 def clean_window():
