@@ -1,54 +1,68 @@
 import tkinter as tk
 from tkinter import messagebox
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 from funk import solving_eq
 
 
 def main():
+    global canvas_widget
     label_res_x_1.config(text="")
     label_res_x_2.config(text="")
     label_res.config(text="")
 
-    a = float(entry_a.get() or 0)
-    b = float(entry_b.get() or 0)
-    c = float(entry_c.get() or 0)
-
     try:
+        a = float(entry_a.get() or 0)
+        b = float(entry_b.get() or 0)
+        c = float(entry_c.get() or 0)
         answer = solving_eq(a, b, c)
+        visual_eq(a, b, c)
+
+        if len(answer) == 1:
+            label_res.config(text=answer[0])
+            canvas_widget.destroy()
+
+        elif len(answer) == 2:
+            label_res.config(text=answer[0])
+            label_res_x_1.config(text=answer[1])
+
+        elif len(answer) == 3:
+            label_res.config(text=answer[0])
+            label_res_x_1.config(text=answer[1])
+            label_res_x_2.config(text=answer[2])
 
     except ValueError:
         messagebox.showerror("Error", "Неверный формат ввода")
 
-    if len(answer) == 1:
-        label_res.config(text=answer[0])
 
-    elif len(answer) == 2:
-        label_res.config(text=answer[0])
-        label_res_x_1.config(text=answer[1])
-
-    elif len(answer) == 3:
-        label_res.config(text=answer[0])
-        label_res_x_1.config(text=answer[1])
-        label_res_x_2.config(text=answer[2])
-
+def visual_eq(a, b, c):
+    global canvas_widget
     x = np.linspace(-10, 10, 400)
     eq = a * x**2 + b * x + c
-    plt.plot(x, eq)
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.title("Визуализация функции")
-    plt.grid(True)
-    plt.show()
+    fig, axes = plt.subplots()
+    axes.plot(x, eq)
+    axes.set_xlabel("x")
+    axes.set_ylabel("y")
+    axes.set_title("Визуализация")
+    axes.grid(True)
+    axes.axhline(0, color="black", lw=1)
+    axes.axvline(0, color="black", lw=1)
+    canvas = FigureCanvasTkAgg(fig, master=window)
+    canvas_widget = canvas.get_tk_widget()
+    canvas_widget.grid(row=6, column=0, columnspan=7, padx=5, pady=5)
 
 
 def clean_window():
+    global canvas_widget
     entry_a.delete(0, tk.END)
     entry_b.delete(0, tk.END)
     entry_c.delete(0, tk.END)
     label_res_x_1.config(text="")
     label_res_x_2.config(text="")
     label_res.config(text="")
+    if canvas_widget:
+        canvas_widget.destroy()
 
 
 window = tk.Tk()

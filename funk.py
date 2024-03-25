@@ -2,17 +2,17 @@ import math
 
 
 def solving_eq(a, b, c):
-    
+
     D = b**2 - 4 * a * c
     if a == 0 and b == 0 and c == 0:
         return ["Решением данного уравнения является вся числовая прямая"]
-    
+
     elif a == 0 and b == 0:
         return ["Уравнение не имеет решений"]
-              
+
     elif D < 0:
         return ["Уравнение не имеет решений в действительных числах"]
-    
+
     elif a == 0:
         x = -c / b
         if x == -0.0:
@@ -24,7 +24,7 @@ def solving_eq(a, b, c):
         if x == -0.0:
             x = 0.0
         return ["Уравнение имеет единственное решение", "x = " + str(x)]
-        
+
     else:
         x1 = (-b + math.sqrt(D)) / (2 * a)
         x2 = (-b - math.sqrt(D)) / (2 * a)
