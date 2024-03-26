@@ -21,7 +21,6 @@ def main():
 
         if len(answer) == 1:
             label_res.config(text=answer[0])
-            canvas_widget.destroy()
 
         elif len(answer) == 2:
             label_res.config(text=answer[0])
