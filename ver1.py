@@ -17,6 +17,10 @@ def main():
         b = float(entry_b.get() or 0)
         c = float(entry_c.get() or 0)
         answer = solving_eq(a, b, c)
+        try:
+            canvas_widget.destroy()
+        except:
+            pass
         visual_eq(a, b, c)
 
         if len(answer) == 1:
@@ -60,8 +64,10 @@ def clean_window():
     label_res_x_1.config(text="")
     label_res_x_2.config(text="")
     label_res.config(text="")
-    if canvas_widget:
+    try:
         canvas_widget.destroy()
+    except:
+        pass
 
 
 window = tk.Tk()
