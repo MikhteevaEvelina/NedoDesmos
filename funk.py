@@ -33,3 +33,7 @@ def solving_eq(a, b, c):
         if x2 == -0.0:
             x2 = 0.0
         return ["Уравнение имеет два решения", "x1 = " + str(x1), "x2 = " + str(x2)]
+
+
+def wrapper():
+    return None
