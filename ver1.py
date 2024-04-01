@@ -5,6 +5,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 from funk import solving_eq
 import re
+import sqlite3
 
 
 def parse_eq(eq):
@@ -85,6 +86,34 @@ def clean_window():
     except:
         pass
 
+def history_bd():
+    buttons = []
+    window = tk.Tk()
+    window.title("История запросов")
+    window.geometry("250x200")
+
+    with sqlite3.connect('database.db') as db:
+        cursor = db.cursor()
+        cursor.execute(""" SELECT * from request_history""")
+        hist = cursor.fetchall()
+        for row in hist:
+            st = str(row[1]) + "x^2+" + str(row[2]) + "x+" + str(row[3])
+            buttons.append(tk.Button(window, text=st, command=again(st)))
+            buttons[-1].grid(row=len(buttons), column=2, padx=5, pady=5)
+
+def again(st):
+    global canvas_widget
+    entry_eq.delete(0, tk.END)
+    entry_eq.insert(0, st)
+    label_res_x_1.config(text="")
+    label_res_x_2.config(text="")
+    label_res.config(text="")
+    try:
+        canvas_widget.destroy()
+    except:
+        pass
+    main()
+
 
 window = tk.Tk()
 window.title("Решение квадратных уравнений")
@@ -108,5 +137,8 @@ solving = tk.Button(window, text="Решить", command=main)
 solving.grid(row=4, column=0, padx=5, pady=5)
 clear = tk.Button(window, text="Очистить", command=clean_window)
 clear.grid(row=4, column=1, padx=5, pady=5)
+history = tk.Button(window, text="История", command=history_bd)
+history.grid(row=4, column=2, padx=5, pady=5)
+
 
 window.mainloop()
