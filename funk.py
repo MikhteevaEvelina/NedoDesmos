@@ -1,17 +1,21 @@
 import math
 import sqlite3
+
 id = 0
 
-def solving_eq(a, b, c, d=0, e=0): # ax^2 + bx + c = dx + e
+
+def solving_eq(a, b, c, d=0, e=0):  # ax^2 + bx + c = dx + e
     global id
     id += 1
 
-    with sqlite3.connect('database.db') as db:
+    with sqlite3.connect("database.db") as db:
         cursor = db.cursor()
-        cursor.execute(""" INSERT INTO request_history (id, a, b, c, d, e) VALUES (?, ?, ?, ?, ?, ?); """, (id, a, b, c, d, e))
+        cursor.execute(
+            """ INSERT INTO request_history (id, a, b, c, d, e) VALUES (?, ?, ?, ?, ?, ?); """,
+            (id, a, b, c, d, e),
+        )
 
-
-    D = (b - d)**2 - 4 * a * (c -e)
+    D = (b - d) ** 2 - 4 * a * (c - e)
     if a == 0 and b - d == 0 and c - e == 0:
         return ["Решением данного уравнения является вся числовая прямая"]
 
@@ -24,17 +28,25 @@ def solving_eq(a, b, c, d=0, e=0): # ax^2 + bx + c = dx + e
     else:
         answer = roots(a, b, c, D, d, e)
         if len(answer) == 1:
-            return ["Уравнение имеет единственное решение", "x = " + str(answer[0][0])]
+            return [
+                "Уравнение имеет единственное решение",
+                "x = " + str(answer[0][0]),
+                answer,
+            ]
 
         elif len(answer) == 2:
-            return ["Уравнение имеет два решения", "x1 = " + str(answer[0][0]), "x2 = " + str(answer[1][0])]
-        
+            return [
+                "Уравнение имеет два решения",
+                "x1 = " + str(answer[0][0]),
+                "x2 = " + str(answer[1][0]),
+                answer,
+            ]
 
 
 def roots(a, b, c, D, d=0, e=0):
 
     if a == 0:
-        x = -(c-e) / (b - d)
+        x = -(c - e) / (b - d)
         y = d * x + e
         if x == -0.0:
             x = 0.0

@@ -14,9 +14,9 @@ def parse_eq(eq):
             eq,
         )
         if m:
-            a = float(m.group(1).replace(" ", "") or "1")
-            b = float(m.group(2).replace(" ", "") or "1")
-            c = float(m.group(3).replace(" ", "") or "0")
+            a = float(m.group(1) or "1")
+            b = float(m.group(2) or "1")
+            c = float(m.group(3))
             return [a, b, c]
 
         raise ValueError("Неверный формат ввода")
@@ -41,24 +41,40 @@ def main():
         canvas_widget.destroy()
     except:
         pass
-    visual_eq(a, b, c)
+    if len(answer) == 3:
+        min_edge = answer[2][0][0] - 10
+        max_edge = answer[2][0][0] + 10
+        roots = [answer[2][0][0]]
+    elif len(answer) == 4:
+        min_edge = min(answer[3][0][0], answer[3][1][0]) - 2
+        max_edge = max(answer[3][0][0], answer[3][1][0]) + 2
+        roots = [answer[3][0][0], answer[3][1][0]]
+    elif a == 0:
+        min_edge = -10
+        max_edge = 10
+        roots = []
+    else:
+        min_edge = -b / (2 * a) - 10
+        max_edge = -b / (2 * a) + 10
+        roots = []
+    visual_eq(a, b, c, min_edge, max_edge, roots)
 
     if len(answer) == 1:
         label_res.config(text=answer[0])
 
-    elif len(answer) == 2:
+    elif len(answer) == 3:
         label_res.config(text=answer[0])
         label_res_x_1.config(text=answer[1])
 
-    elif len(answer) == 3:
+    elif len(answer) == 4:
         label_res.config(text=answer[0])
         label_res_x_1.config(text=answer[1])
         label_res_x_2.config(text=answer[2])
 
 
-def visual_eq(a, b, c):
+def visual_eq(a, b, c, left, right, roots):
     global canvas_widget
-    x = np.linspace(-10, 10, 400)
+    x = np.linspace(left, right, 400)
     eq = a * x**2 + b * x + c
     fig, axes = plt.subplots()
     axes.plot(x, eq)
@@ -68,9 +84,22 @@ def visual_eq(a, b, c):
     axes.grid(True)
     axes.axhline(0, color="black", lw=1)
     axes.axvline(0, color="black", lw=1)
+    axes.autoscale_view()
+    axes.scatter(roots, np.zeros_like(roots), color="red", label="Roots")
+    for root in roots:
+        axes.annotate(
+            f"({root:.2f}, 0)",
+            xy=(root, 0),
+            xytext=(root, -10),
+            textcoords="offset points",
+            ha="center",
+            va="top",
+            bbox=dict(boxstyle="round,pad=0.5", fc="red", alpha=0.5),
+            arrowprops=dict(arrowstyle="->", connectionstyle="arc3,rad=0"),
+        )
     canvas = FigureCanvasTkAgg(fig, master=window)
     canvas_widget = canvas.get_tk_widget()
-    canvas_widget.grid(row=6, column=0, columnspan=7, padx=5, pady=5)
+    canvas_widget.grid(row=8, column=0, columnspan=7, padx=5, pady=5)
 
 
 def clean_window():
@@ -89,8 +118,10 @@ def clean_window():
 window = tk.Tk()
 window.title("Решение квадратных уравнений")
 
-label_1 = tk.Label(window, text="Введите квадратное уравнение:")
-label_1.grid(row=0, column=0, columnspan=7, padx=5, pady=5)
+label_title = tk.Label(window, text="Введите квадратное уравнение:")
+label_title.grid(row=0, column=0, columnspan=7, padx=5, pady=5)
+label_format = tk.Label(window, text="(Формат ввода: ax^2+bx+c)")
+label_format.grid(row=1, column=0, columnspan=7, padx=5, pady=5)
 entry_eq = tk.Entry(window, width=30)
 entry_eq.grid(row=2, column=0, columnspan=5, padx=5, pady=5)
 entry_eq.insert(0, "0x^2+0x+0")
