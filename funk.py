@@ -1,8 +1,15 @@
 import math
+import sqlite3
+id = 0
 
+def solving_eq(a, b, c, d=0, e=0): # ax^2 + bx + c = dx + e
+    global id
+    id += 1
 
-def solving_eq(a, b, c, d=0, e=0):
-    # ax^2 + bx + c = dx + e
+    with sqlite3.connect('database.db') as db:
+        cursor = db.cursor()
+        cursor.execute(""" INSERT INTO request_history (id, a, b, c, d, e) VALUES (?, ?, ?, ?, ?, ?); """, (id, a, b, c, d, e))
+
 
     D = (b - d)**2 - 4 * a * (c -e)
     if a == 0 and b - d == 0 and c - e == 0:
