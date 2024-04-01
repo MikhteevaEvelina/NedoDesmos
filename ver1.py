@@ -87,7 +87,7 @@ def clean_window():
         pass
 
 def history_bd():
-    buttons = []
+    eqs = []
     window = tk.Tk()
     window.title("История запросов")
     window.geometry("250x200")
@@ -96,15 +96,35 @@ def history_bd():
         cursor = db.cursor()
         cursor.execute(""" SELECT * from request_history""")
         hist = cursor.fetchall()
+        
         for row in hist:
-            st = str(row[1]) + "x^2+" + str(row[2]) + "x+" + str(row[3])
-            buttons.append(tk.Button(window, text=st, command=again(st)))
-            buttons[-1].grid(row=len(buttons), column=2, padx=5, pady=5)
+            st = str(row[1]) + "x^2"
+            if row[2] < 0:
+                st += str(row[2]) + "x"
+            else:
+                st += "+" + str(row[2]) + "x"
+            if row[2] < 0:
+                st += str(row[3])
+            else:
+                st += "+" + str(row[3])
+            eqs.append(st)
+        listbox = tk.Listbox(window)
+        listbox.pack(fill=tk.BOTH, expand=True)
 
-def again(st):
+        for s in eqs:
+            listbox.insert(tk.END, s)
+        listbox.bind("<Double-1>", again)
+
+
+
+def again(event):
     global canvas_widget
+    select_item = event.widget.curselection()
+    if select_item:
+        i = int(select_item[0])
+        item = event.widget.get(i)
     entry_eq.delete(0, tk.END)
-    entry_eq.insert(0, st)
+    entry_eq.insert(0, item)
     label_res_x_1.config(text="")
     label_res_x_2.config(text="")
     label_res.config(text="")
