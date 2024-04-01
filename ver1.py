@@ -5,6 +5,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 from funk import solving_eq
 import re
+import sqlite3
 
 
 def parse_eq(eq):
@@ -115,6 +116,48 @@ def clean_window():
         pass
 
 
+def history_bd():
+    buttons = []
+    window = tk.Tk()
+    window.title("История запросов")
+    window.geometry("250x200")
+
+    with sqlite3.connect("database.db") as db:
+        cursor = db.cursor()
+        cursor.execute(""" SELECT * from request_history""")
+        hist = cursor.fetchall()
+        for row in hist:
+            st = str(row[1]) + "x^2+" + str(row[2]) + "x+" + str(row[3])
+            buttons.append(tk.Button(window, text=st, command=again(st)))
+            buttons[-1].grid(row=len(buttons), column=2, padx=5, pady=5)
+
+
+def again(st):
+    global canvas_widget
+    entry_eq.delete(0, tk.END)
+    entry_eq.insert(0, st)
+    main()
+
+
+def intersec_points():
+    pass
+
+
+def add_line():
+    new_window = tk.Tk()
+    new_window.title("Добавление прямой")
+    label_title = tk.Label(new_window, text="Введите уравнение прямой:")
+    label_title.grid(row=0, column=0, columnspan=5, padx=5, pady=5)
+    label_format = tk.Label(new_window, text="(Формат ввода: dx+e)")
+    label_format.grid(row=1, column=0, columnspan=5, padx=5, pady=5)
+    entry_line = tk.Entry(new_window, width=20)
+    entry_line.grid(row=2, column=0, columnspan=5, padx=5, pady=5)
+    label_0 = tk.Label(new_window, text="= 0")
+    label_0.grid(row=2, column=6, padx=5, pady=5)
+    intersec = tk.Button(new_window, text="Найти пересечения", command=intersec_points)
+    intersec.grid(row=3, column=0, padx=5, pady=5)
+
+
 window = tk.Tk()
 window.title("Решение квадратных уравнений")
 
@@ -139,5 +182,10 @@ solving = tk.Button(window, text="Решить", command=main)
 solving.grid(row=4, column=0, padx=5, pady=5)
 clear = tk.Button(window, text="Очистить", command=clean_window)
 clear.grid(row=4, column=1, padx=5, pady=5)
+history = tk.Button(window, text="Добавить прямую", command=add_line)
+history.grid(row=4, column=2, padx=5, pady=5)
+history = tk.Button(window, text="История", command=history_bd)
+history.grid(row=4, column=3, padx=5, pady=5)
+
 
 window.mainloop()
