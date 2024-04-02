@@ -82,9 +82,8 @@ def main(line=""):
         min_x = -b / (2 * a) - 10
         max_x = -b / (2 * a) + 10
         roots = []
-    visual_eq(a, b, c, min_x, max_x, roots)
+    visual_eq(a, b, c, min_x, max_x, roots, d, e)
 
-    answer = solving_eq(a, b, c)
     if len(answer) == 1:
         label_res.config(text=answer[0])
 
@@ -98,7 +97,7 @@ def main(line=""):
         label_res_x_2.config(text=answer[2])
 
 
-def visual_eq(a, b, c, left, right, roots):
+def visual_eq(a, b, c, left, right, roots, d=0, e=0):
     global canvas_widget
     x = np.linspace(left, right, 400)
     eq = a * x**2 + b * x + c
@@ -124,6 +123,9 @@ def visual_eq(a, b, c, left, right, roots):
             bbox=dict(boxstyle="round,pad=0.5", fc="red", alpha=0.5),
             arrowprops=dict(arrowstyle="->", connectionstyle="arc3,rad=0"),
         )
+    if d != 0 or e != 0:
+        y_line = d * x + e
+        axes.plot(x, y_line, color="red", label=str(d) + "x+" + str(e))
     canvas = FigureCanvasTkAgg(fig, master=window)
     canvas_widget = canvas.get_tk_widget()
     canvas_widget.grid(row=8, column=0, columnspan=7, padx=5, pady=5)
@@ -203,6 +205,10 @@ def again(event):
 
 
 def add_line():
+
+    def find_intersection():
+        main(entry_line.get())
+
     new_window = tk.Tk()
     new_window.title("Добавление прямой")
     label_title = tk.Label(new_window, text="Введите уравнение прямой:")
@@ -214,7 +220,11 @@ def add_line():
     label_0 = tk.Label(new_window, text="= 0")
     label_0.grid(row=2, column=6, padx=5, pady=5)
     intersec = tk.Button(
+<<<<<<< HEAD
         new_window, text="Найти пересечения", command=line(entry_line.get())
+=======
+        new_window, text="Найти пересечения", command=find_intersection
+>>>>>>> fa0774e58bb5a04cd29eaf8eccea66ca378ece76
     )
     intersec.grid(row=3, column=0, padx=5, pady=5)
 
@@ -247,8 +257,8 @@ solving = tk.Button(window, text="Решить", command=main)
 solving.grid(row=4, column=0, padx=5, pady=5)
 clear = tk.Button(window, text="Очистить", command=clean_window)
 clear.grid(row=4, column=1, padx=5, pady=5)
-add_line = tk.Button(window, text="Добавить прямую", command=add_line)
-add_line.grid(row=4, column=2, padx=5, pady=5)
+add_l = tk.Button(window, text="Добавить прямую", command=add_line)
+add_l.grid(row=4, column=2, padx=5, pady=5)
 history = tk.Button(window, text="История", command=history_bd)
 history.grid(row=4, column=3, padx=5, pady=5)
 
