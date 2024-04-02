@@ -87,10 +87,11 @@ def clean_window():
         pass
 
 def history_bd():
+    global window_h
     eqs = []
-    window = tk.Tk()
-    window.title("История запросов")
-    window.geometry("250x200")
+    window_h = tk.Tk()
+    window_h.title("История запросов")
+    window_h.geometry("250x200")
 
     with sqlite3.connect('database.db') as db:
         cursor = db.cursor()
@@ -108,13 +109,23 @@ def history_bd():
             else:
                 st += "+" + str(row[3])
             eqs.append(st)
-        listbox = tk.Listbox(window)
-        listbox.pack(fill=tk.BOTH, expand=True)
+
+        b = tk.Button(window_h, text="Очистить историю", command=clean_history)
+        b.grid(row=0, column=0, padx=5, pady=5)
+        listbox = tk.Listbox(window_h)
+        listbox.grid(row=1, column=0, columnspan=2, sticky=tk.EW, padx=5, pady=20)
 
         for s in eqs:
             listbox.insert(tk.END, s)
         listbox.bind("<Double-1>", again)
 
+
+def clean_history():
+    window_h.destroy()
+    with sqlite3.connect('database.db') as db:
+        cursor = db.cursor()
+        cursor.execute(""" DELETE FROM request_history""")
+        clean_window()
 
 
 def again(event):
@@ -159,6 +170,8 @@ clear = tk.Button(window, text="Очистить", command=clean_window)
 clear.grid(row=4, column=1, padx=5, pady=5)
 history = tk.Button(window, text="История", command=history_bd)
 history.grid(row=4, column=2, padx=5, pady=5)
+
+
 
 
 window.mainloop()
