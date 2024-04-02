@@ -17,26 +17,50 @@ def solving_eq(a, b, c, d=0, e=0):  # ax^2 + bx + c = dx + e
 
     D = (b - d) ** 2 - 4 * a * (c - e)
     if a == 0 and b - d == 0 and c - e == 0:
-        return ["Решением данного уравнения является вся числовая прямая"]
+        if d == 0 and e == 0:
+            return ["Решением данного уравнения является вся числовая прямая"]
+        else:
+            return ["Прямые совпадают"]
 
     elif a == 0 and b - d == 0:
-        return ["Уравнение не имеет решений"]
+        if d == 0 and e == 0:
+            return ["Уравнение не имеет решений"]
+        else:
+            return ["Функции не имеют точек пересечения"]
 
     elif D < 0:
-        return ["Уравнение не имеет решений в действительных числах"]
+        if d == 0 and e == 0:
+            return ["Уравнение не имеет решений в действительных числах"]
+        else:
+            return ["Функции не имеют точек пересечения"]
 
     else:
         answer = roots(a, b, c, D, d, e)
         if len(answer) == 1:
-            return [
+            if d == 0 and e == 0:
+                return [
                 "Уравнение имеет единственное решение",
+                "x = " + str(answer[0][0]),
+                answer,
+            ]
+            else:
+                return [
+                "Графики имеют одну точку пересечения",
                 "x = " + str(answer[0][0]),
                 answer,
             ]
 
         elif len(answer) == 2:
-            return [
+            if d ==0 and e == 0:
+                return [
                 "Уравнение имеет два решения",
+                "x1 = " + str(answer[0][0]),
+                "x2 = " + str(answer[1][0]),
+                answer,
+            ]
+            else:
+                return [
+                "Графики имеют две точки пересечения",
                 "x1 = " + str(answer[0][0]),
                 "x2 = " + str(answer[1][0]),
                 answer,

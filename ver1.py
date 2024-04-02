@@ -220,11 +220,7 @@ def add_line():
     label_0 = tk.Label(new_window, text="= 0")
     label_0.grid(row=2, column=6, padx=5, pady=5)
     intersec = tk.Button(
-<<<<<<< HEAD
-        new_window, text="Найти пересечения", command=line(entry_line.get())
-=======
         new_window, text="Найти пересечения", command=find_intersection
->>>>>>> fa0774e58bb5a04cd29eaf8eccea66ca378ece76
     )
     intersec.grid(row=3, column=0, padx=5, pady=5)
 
